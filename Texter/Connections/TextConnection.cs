@@ -14,13 +14,17 @@ namespace Texter.Connections
         readonly string _Token;
         readonly IOptions<DbConfiguration> _dbConfig;
 
+        // Connection class is built by .Net Configuration.
+
         public TextConnection(IOptions<DbConfiguration> dbConfig)
         {
-            // builds ConnectionString from appsettings.json
+            // builds field values from appsettings.json
             _SID = dbConfig.Value.SID;
             _Token = dbConfig.Value.Token;
             _dbConfig = dbConfig;
         }
+
+        // Uses phoneNumber from controller to send a text message using Twilio.
 
         public void SendMessage(string phoneNumber)
         {

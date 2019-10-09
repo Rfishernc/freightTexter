@@ -89,7 +89,9 @@ class Test {
   */
 
   setError(errorState) {
-    this.error = errorState;
+    if (errorState !== undefined) {
+      this.error = errorState;
+    }
     const htmlString = this.error ? `<div class='errorDiv'>
                           <p class='errorMsg'>${this.error}</p>
                           <img src='https://media.giphy.com/media/a5MbLFYonqYgg/giphy.gif' class='errorGif' alt='noGif'/>

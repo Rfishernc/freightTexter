@@ -11121,7 +11121,7 @@ const coordConverter = (lat, long, zoom) => {
 */
 
 const getWeather = test => new Promise((resolve, reject) => {
-  __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(`http://api.openweathermap.org/data/2.5/weather?lat=${test.coordinates.latitude}&lon=${test.coordinates.longitude}&units=imperial&APPID=${__WEBPACK_IMPORTED_MODULE_2__apiKeys__["a" /* default */].weather}`).then(data => {
+  __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(`https://api.openweathermap.org/data/2.5/weather?lat=${test.coordinates.latitude}&lon=${test.coordinates.longitude}&units=imperial&APPID=${__WEBPACK_IMPORTED_MODULE_2__apiKeys__["a" /* default */].weather}`).then(data => {
     resolve(data);
   }).catch(error => {
     test.setError(error);
@@ -11137,7 +11137,7 @@ const getWeather = test => new Promise((resolve, reject) => {
 const getWeatherMap = test => new Promise((resolve, reject) => {
   const zoom = 7;
   const { xTile, yTile } = coordConverter(test.coordinates.latitude, test.coordinates.longitude, zoom);
-  const imageUrl = `http://sat.owm.io/sql/${zoom}/${xTile}/${yTile}?from=s2&APPID=${__WEBPACK_IMPORTED_MODULE_2__apiKeys__["a" /* default */].owm}`;
+  const imageUrl = `https://sat.owm.io/sql/${zoom}/${xTile}/${yTile}?from=s2&APPID=${__WEBPACK_IMPORTED_MODULE_2__apiKeys__["a" /* default */].owm}`;
   __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(imageUrl).then(() => {
     const layerUrl = `https://tile.openweathermap.org/map/clouds_new/${zoom}/${xTile}/${yTile}.png?appid=${__WEBPACK_IMPORTED_MODULE_2__apiKeys__["a" /* default */].weather}`;
     console.log(layerUrl);
@@ -11510,7 +11510,7 @@ const addButtonForTest = (context, test, location) => {
   context.innerHTML = htmlString;
 };
 
-__WEBPACK_IMPORTED_MODULE_3__geolocate_geolocate__["a" /* default */].geolocate().then(coordinates => {
+__WEBPACK_IMPORTED_MODULE_3__geolocate_geolocate__["a" /* default */].geolocate(test).then(coordinates => {
   test.setCoordinates(coordinates.coords);
   __WEBPACK_IMPORTED_MODULE_4__weather_weather__["a" /* default */].getWeather(test).then(data => {
     addButtonForTest(buttonContainer, test, data.data.name);
@@ -18703,7 +18703,9 @@ class Test {
   */
 
   setError(errorState) {
-    this.error = errorState;
+    if (errorState !== undefined) {
+      this.error = errorState;
+    }
     const htmlString = this.error ? `<div class='errorDiv'>
                           <p class='errorMsg'>${this.error}</p>
                           <img src='https://media.giphy.com/media/a5MbLFYonqYgg/giphy.gif' class='errorGif' alt='noGif'/>
@@ -19822,10 +19824,20 @@ const newsBuilder = newsData => {
 
 "use strict";
 
-const geolocate = () => new Promise((resolve, reject) => {
+const geolocate = test => new Promise((resolve, reject) => {
   // eslint-disable-next-line no-undef
-  navigator.geolocation.getCurrentPosition(position => {
+
+  const error = test => {
+    test.setError('Geolocation is not supported in your browser.  Please use Chrome.');
+    reject();
+  };
+
+  const success = position => {
     resolve(position);
+  };
+
+  navigator.geolocation.getCurrentPosition(success, () => {
+    error(test);
   });
 });
 
@@ -19880,14 +19892,13 @@ const getPhoneNumber = (phoneNum, test) => new Promise((resolve, reject) => {
   test.setError(false);
   const formattedNum = phoneFormatter(phoneNum, test);
   if (!test.error) {
-    __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(`https://hire-rich-fisher.azurewebsites.net/api/texting/${formattedNum}`).then(() => {
+    __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(`https://localhost:44391/api/texting/${formattedNum}`).then(() => {
       __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#phoneModal').modal('toggle');
       test.run();
       resolve();
     }).catch(err => {
       __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#phoneModal').modal('toggle');
-      test.run();
-      // test.setError(err);
+      test.setError(err);
       reject(err);
     });
   }
@@ -19932,6 +19943,8 @@ const phoneBuilder = test => {
   getPhoneNumber,
   phoneBuilder
 });
+
+// hire-rich-fisher.azurewebsites.net
 
 /***/ })
 /******/ ]);

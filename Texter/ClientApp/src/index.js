@@ -29,7 +29,7 @@ const addButtonForTest = (context, test, location) => {
   context.innerHTML = htmlString;
 };
 
-Geolocate.geolocate()
+Geolocate.geolocate(test)
   .then((coordinates) => {
     test.setCoordinates(coordinates.coords);
     weather.getWeather(test)
