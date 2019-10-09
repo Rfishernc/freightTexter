@@ -21,7 +21,7 @@ const coordConverter = (lat, long, zoom) => {
 */
 
 const getWeather = test => new Promise((resolve, reject) => {
-  axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${test.coordinates.latitude}&lon=${test.coordinates.longitude}&units=imperial&APPID=${apiKeys.weather}`)
+  axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${test.coordinates.latitude}&lon=${test.coordinates.longitude}&units=imperial&APPID=${apiKeys.weather}`)
     .then((data) => {
       resolve(data);
     })
@@ -39,7 +39,7 @@ const getWeather = test => new Promise((resolve, reject) => {
 const getWeatherMap = test => new Promise((resolve, reject) => {
   const zoom = 7;
   const { xTile, yTile } = coordConverter(test.coordinates.latitude, test.coordinates.longitude, zoom);
-  const imageUrl = `http://sat.owm.io/sql/${zoom}/${xTile}/${yTile}?from=s2&APPID=${apiKeys.owm}`;
+  const imageUrl = `https://sat.owm.io/sql/${zoom}/${xTile}/${yTile}?from=s2&APPID=${apiKeys.owm}`;
   axios.get(imageUrl)
     .then(() => {
       const layerUrl = `https://tile.openweathermap.org/map/clouds_new/${zoom}/${xTile}/${yTile}.png?appid=${apiKeys.weather}`;

@@ -19,6 +19,8 @@ namespace Texter.Controllers
             _connection = connection;
         }
 
+        // Takes a phone number from client and passes to the SendMessage method.  Returns the accepted phone number in response.
+
         [HttpPost("{phoneNumber}")]
         public ActionResult SendMessage(string phoneNumber)
         {

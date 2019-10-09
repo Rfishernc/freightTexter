@@ -36,7 +36,7 @@ const getPhoneNumber = (phoneNum, test) => new Promise((resolve, reject) => {
   test.setError(false);
   const formattedNum = phoneFormatter(phoneNum, test);
   if (!test.error) {
-    axios.post(`https://hire-rich-fisher.azurewebsites.net/api/texting/${formattedNum}`)
+    axios.post(`https://localhost:44391/api/texting/${formattedNum}`)
       .then(() => {
         $('#phoneModal').modal('toggle');
         test.run();
@@ -44,8 +44,7 @@ const getPhoneNumber = (phoneNum, test) => new Promise((resolve, reject) => {
       })
       .catch((err) => {
         $('#phoneModal').modal('toggle');
-        test.run();
-        // test.setError(err);
+        test.setError(err);
         reject(err);
       });
   }
@@ -90,3 +89,5 @@ export default {
   getPhoneNumber,
   phoneBuilder,
 };
+
+// hire-rich-fisher.azurewebsites.net
